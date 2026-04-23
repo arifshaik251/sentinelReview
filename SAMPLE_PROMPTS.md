@@ -1,10 +1,4 @@
-# 📝 Sample Prompts & Test Inputs
-
-This appendix shows **exactly** what each agent receives and the kinds of code
-snippets that best demonstrate the pipeline during a live demo. Use any of
-the *Demo Inputs* below by pasting them into the Streamlit text area.
-
----
+# Sample Prompts & Test Inputs
 
 ## 1. System prompts used by each LLM agent
 
@@ -86,7 +80,7 @@ Detects and masks these secret types **before any data leaves the machine**:
 
 ## 2. Demo inputs — copy any of these into the UI
 
-### 🔴 Demo Input A — "The Triple Threat" (best 1-minute demo)
+###  Demo Input A — "The Triple Threat" (best 1-minute demo)
 Triggers **all three** agents: guardrail catches a secret, reviewer catches
 style issues, auditor catches SQL injection + command injection.
 
@@ -105,16 +99,8 @@ def get_user(username):
 
 def run_command(user_input):
     os.system(f"echo {user_input}")
-```
-**Expected outcome:**
-Overall Risk → **CRITICAL**
-Guardrail → 2 secrets masked (AWS key + hardcoded password)
-Auditor → SQL injection (A03) + OS command injection (A03) + hardcoded creds (A07)
-Reviewer → missing type hints, no connection close, no docstrings
 
----
-
-### 🟡 Demo Input B — Deserialization + weak crypto
+### Demo Input B — Deserialization + weak crypto
 ```python
 import pickle, hashlib
 
@@ -128,7 +114,7 @@ def hash_password(pwd: str) -> str:
 
 ---
 
-### 🟡 Demo Input C — Path traversal + XSS
+### Demo Input C — Path traversal + XSS
 ```python
 from flask import Flask, request, send_file
 app = Flask(__name__)
@@ -147,7 +133,7 @@ def greet():
 
 ---
 
-### 🟢 Demo Input D — Clean code (shows the "pass" path)
+### Demo Input D — Clean code (shows the "pass" path)
 ```python
 import os
 from hashlib import sha256
@@ -160,12 +146,3 @@ DB_HOST = os.environ.get("DB_HOST", "localhost")
 ```
 **Expected outcome:** Guardrail ✅ clean • Reviewer: LOW minor suggestions
 • Auditor: no critical findings • Overall Risk → **LOW**.
-
----
-
-## 3. Tips for a strong live demo
-1. Start with **Input D** (clean code) to show "no false positives".
-2. Switch to **Input A** to show the *CRITICAL* path end-to-end.
-3. Open the **Guardrail tab** first — explain *"secrets never left the machine"*.
-4. Toggle **parallel=OFF** once to show ~2× latency gain.
-5. End on the **Unified Report tab** — point out the prioritised Action Plan.
