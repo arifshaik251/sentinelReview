@@ -1,4 +1,4 @@
-# 🛡️ SentinelReview : Multi-Agent Code Review & Security Audit
+# SentinelReview : Multi-Agent Code Review & Security Audit
 
 A hierarchical, parallel multi-agent system that reviews source code for
 quality and OWASP Top-10 security issues, then produces a single
@@ -12,7 +12,7 @@ produce a unified risk report in ~10 seconds.
 
 ---
 
-## 🧠 Architecture
+##  Architecture
 
 ```mermaid
 flowchart TD
@@ -39,18 +39,18 @@ Hierarchical control + parallel fan-out. The Orchestrator owns the pipeline
 state; the Reviewer and Auditor run in parallel to cut latency roughly in half.
 
 ### Safety & guardrails
-- **Local-first secret scanning** — secrets are detected and masked before any prompt is sent to Anthropic.
+- **Local-first secret scanning**  secrets are detected and masked before any prompt is sent to Anthropic.
 - **Structured system prompts** with fixed output sections (Summary / Issues / Remediation) reduce prompt-injection surface.
 - **Dataclass result types** (`GuardrailResult`, `ReviewResult`, `AuditResult`, `SynthesisResult`) ensure downstream agents only consume typed fields, not free-form LLM text.
-- **Error isolation** — any agent failure is captured in `PipelineResult.errors` without crashing the pipeline.
+- **Error isolation** : any agent failure is captured in `PipelineResult.errors` without crashing the pipeline.
 
 ---
 
-## 🚀 Run locally (beginner-friendly)
+##  Run locally (beginner-friendly)
 
 ### 1. Prerequisites
-- Python **3.10+** — https://www.python.org/downloads/ 
-- An Anthropic API key — https://console.anthropic.com/settings/keys
+- Python **3.10+** : https://www.python.org/downloads/ 
+- An Anthropic API key : https://console.anthropic.com/settings/keys
 
 ### 2. Clone & set up
 ```bash
@@ -82,7 +82,7 @@ Opens at **http://localhost:8501**.
 
 ---
 
-## 🧪 Tests
+##  Tests
 
 ```bash
 pytest -v
@@ -92,40 +92,4 @@ pytest -v
 - secret-pattern detection (AWS, GitHub, bearer, private keys, DB URIs)
 - pipeline happy path + parallel/sequential modes
 - error propagation from any agent to `PipelineResult.errors`
-
----
-
-## ☁️ Deploy to Azure App Service (Free F1 tier)
-
-1. Push this repo to **GitHub** (public).
-2. Azure Portal → **Create → Web App** → Linux, Python 3.11, **F1 (Free)**.
-3. **Configuration → General settings → Startup Command:** `bash startup.sh`
-4. **Configuration → Application settings:** add `ANTHROPIC_API_KEY`.
-5. **Deployment Center → GitHub → main branch → Save.**
-6. Open `https://<your-app>.azurewebsites.net` — first boot takes ~30 s.
-
-See the full walkthrough in the project write-up.
-
----
-
-## 📁 Project layout
-```
-sentinel-review/
-├── app/
-│   └── main.py             # Streamlit UI entrypoint
-├── agents/
-│   ├── orchestrator.py     # pipeline controller
-│   ├── guardrail.py        # regex secret scanner
-│   ├── reviewer.py         # code-quality agent
-│   ├── auditor.py          # OWASP security agent
-│   └── synthesizer.py      # unified-report agent
-├── tests/                  # pytest suite (mocked LLMs)
-├── requirements.txt
-├── REPORT.md               # 1–2 page project report (required deliverable)
-├── startup.sh              # Azure Linux startup command
-├── .deployment             # Azure build config
-├── .env.example
-└── README.md
-```
-
 
